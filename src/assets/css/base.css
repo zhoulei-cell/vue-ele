@@ -1,0 +1,15 @@
+
+input{
+  outline: none;
+}
+
+a{
+  text-decoration: none;
+}
+
+.reset-btn{
+  padding: 0;
+  outline: none;
+  border: 1px solid #ccc;
+  background-color: #fff;
+}

@@ -1,32 +1,39 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+    <div class="main">
+      <router-view/>
     </div>
-    <router-view/>
+    <TabBar v-if="isShowTabBar"/>
   </div>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
+<script>
+import { TabBar } from 'components/Demand'
+export default {
+  name: 'App',
+  computed: {
+    isShowTabBar() {
+      const path = this.$route.path
+      return !!(path === '/msite' || path === '/order' || path === '/mine')
     }
+  },
+  components: {
+    TabBar
   }
 }
+</script>
+
+<style lang="scss">
+  html,body,#app{
+    overflow: hidden;
+    height: 100%;
+  }
+  #app{
+    display: flex;
+    flex-direction: column;
+    .main{
+      flex: 1;
+      overflow: hidden;
+    }
+  }
 </style>
