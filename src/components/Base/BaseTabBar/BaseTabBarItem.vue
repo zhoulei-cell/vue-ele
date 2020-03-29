@@ -23,10 +23,10 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    color: #909399;
+    color: $color-primary-light-6;
     font-size: 12px;
     &.router-link-active{
-      color: #409eff;
+      color: $color-primary;
     }
     .iconfont{
       font-size: 18px;

@@ -16,11 +16,11 @@ export default {
 <style lang="scss">
   .msite-search{
     padding: 10px 15px;
-    background-image: linear-gradient(90deg, #0af, #0085ff);
+    background-image: $bg-img-primary;
     .search-box{
       height: 30px;
-      background-color: #fff;
-      color: #c0c4cc;
+      background-color: $color-white;
+      color: $color-primary-light-8;
       font-size: 12px;
       text-align: center;
       line-height: 30px;

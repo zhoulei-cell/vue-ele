@@ -135,23 +135,23 @@ export default {
       .login-form{
         padding-top: 16px;
         .message-box{
-          color: #999;
+          color: $color-primary-light-6;
           font-size: 14px;
         }
         .message-box a{
-          color: #409eff;
+          color: $color-primary;
         }
         .btn{
           margin-top: 30px;
           border: none;
-          background-color: #4cd96f;
-          color: #fff;
+          background-color: $color-success;
+          color: $color-white;
         }
         .about{
           display: block;
           width: 100%;
           margin-top: 20px;
-          color: #999;
+          color: $color-primary-light-6;
           font-size: 12px;
           text-align: center;
         }

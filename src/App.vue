@@ -3,7 +3,7 @@
     <div class="main">
       <router-view/>
     </div>
-    <TabBar v-if="isShowTabBar"/>
+    <TabBar v-show="isShowTabBar"/>
   </div>
 </template>
 

@@ -1,12 +1,24 @@
 <template>
   <div class="msite">
-    <MsiteHeader @click="showAddrPage"/>
+    <MsiteHeader
+      @click="toggleAddrPage(true)"
+      :formattedAddress="formattedAddress"
+    />
     <MsiteSearch/>
 
     <transition name="fade">
-      <MsiteAddrMask v-if="isShowAddr" :hideAddrPage="hideAddrPage"/>
+      <MsiteAddrMask
+        v-if="isShowAddr"
+        :toggleAddrPage="toggleAddrPage"
+        :toggleCityPage="toggleCityPage"
+        :city="city"
+        :formattedAddress="formattedAddress"
+      />
     </transition>
-    <MsiteCityMask v-if="isShowCity"/>
+    <MsiteCityMask
+      v-if="isShowCity"
+      :toggleCityPage="toggleCityPage"
+    />
   </div>
 </template>
 
@@ -15,6 +27,7 @@ import MsiteHeader from './ChildComps/MsiteHeader'
 import MsiteSearch from './ChildComps/MsiteSearch'
 import MsiteAddrMask from './ChildComps/MsiteAddrMask'
 import MsiteCityMask from './ChildComps/MsiteCityMask'
+import { mapActions, mapState } from 'vuex'
 export default {
   name: 'Msite',
   data() {
@@ -23,12 +36,22 @@ export default {
       isShowCity: false
     }
   },
+  mounted() {
+    this.getLocation()
+  },
+  computed: {
+    ...mapState('location', {
+      city: 'city',
+      formattedAddress: 'address'
+    })
+  },
   methods: {
-    showAddrPage() {
-      this.isShowAddr = true
+    ...mapActions('location', ['getLocation']),
+    toggleAddrPage(val) {
+      this.isShowAddr = val
     },
-    hideAddrPage() {
-      this.isShowAddr = false
+    toggleCityPage(val) {
+      this.isShowCity = val
     }
   },
   components: {
@@ -49,7 +72,7 @@ export default {
     transform: translate(100%, 0);
   }
   .fade-enter-active, .fade-leave-active{
-    transition: all 1s;
+    transition: all .3s;
   }
   .fade-leave, .fade-enter-to{
     transform: translate(0);

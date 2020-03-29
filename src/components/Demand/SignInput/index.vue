@@ -64,7 +64,7 @@ export default {
     border: 1px solid #ccc;
     border-radius: 4px;
     &.focus{
-      border-color: #409eff;
+      border-color: $color-primary;
     }
     &.error{
       border-color: red;
@@ -79,7 +79,7 @@ export default {
       border: none;
       font-size: 12px;
       &.active{
-        color: #409eff;
+        color: $color-primary;
       }
     }
   }
