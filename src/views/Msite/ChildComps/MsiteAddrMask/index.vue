@@ -1,13 +1,28 @@
 <template>
   <div class="address-mask">
-    <AddrNavBar @leftClick="toggleAddrPage(false)"/>
-    <AddrSearch @cityClick="toggleCityPage(true)" :city="city" v-model="searchVal" :value="searchVal"/>
-    <AddrLocation :formattedAddress="formattedAddress"/>
-    <AddrSearchList :tips="tips" :isNoSearch="isNoSearch"/>
+    <AddrNavBar
+      @leftClick="toggleAddrPage(false)"
+    />
+    <AddrSearch
+      @cityClick="toggleCityPage(true)"
+      :city="city"
+      v-model="searchVal"
+      :value="searchVal"
+    />
+    <AddrLocation
+      :formattedAddress="formattedAddress"
+    />
+    <AddrSearchList
+      :tips="tips"
+      :isNoSearch="isNoSearch"
+      @tipClick="setAddress"
+    />
   </div>
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
+import * as TYPES from 'store/mutation-types'
 import AddrNavBar from './ChildComps/AddrNavBar'
 import AddrSearch from './ChildComps/AddrSearch'
 import AddrLocation from './ChildComps/AddrLocation'
@@ -26,6 +41,15 @@ export default {
       searchVal: '',
       tips: [],
       isNoSearch: false
+    }
+  },
+  methods: {
+    ...mapMutations('location', {
+      setAddr: TYPES.SET_ADDRESS
+    }),
+    setAddress(addr) {
+      this.setAddr(addr)
+      this.toggleAddrPage(false)
     }
   },
   watch: {

@@ -1,16 +1,16 @@
 <template>
-  <div class="city-list-wrapper" ref="city">
+  <div class="city-list-wrapper" ref="cityWrap">
     <ul class="city-group-list" v-if="!isSearch">
-      <li class="city-group-list-item" v-for="(item, index) in cityList" :key="index">
+      <li class="city-group-list-item" v-for="(item, index) in cityList" :key="index" ref="cityGroup">
         <h3 class="city-index">{{item.key}}</h3>
         <ul class="city-list">
-          <li class="city-list-item" v-for="city in item.list" :key="city.id">{{city.name}}</li>
+          <li class="city-list-item" v-for="city in item.list" :key="city.id" @click.stop="$emit('cityClick', city.name)">{{city.name}}</li>
         </ul>
       </li>
     </ul>
 
     <ul class="search-list" v-show="searchList.length > 0 && isSearch">
-      <li class="search-list-item" v-for="item in searchList" :key="item.id">{{item.name}}</li>
+      <li class="search-list-item" v-for="item in searchList" :key="item.id" @click.stop="$emit('cityClick', item.name)">{{item.name}}</li>
     </ul>
 
     <div class="no-search" v-show="searchList.length === 0 && isSearch">
@@ -21,16 +21,9 @@
 </template>
 
 <script>
+import Events from 'utils/Events'
 export default {
   name: 'CityList',
-  mounted() {
-    this.$nextTick(() => {
-      console.log(this.$refs.city)
-      this.$refs.city.addEventListener('scroll', () => {
-        console.log(this.$refs.city.scrollTop)
-      })
-    })
-  },
   props: {
     cityList: {
       type: Array,
@@ -45,6 +38,64 @@ export default {
       }
     },
     isSearch: Boolean
+  },
+  data() {
+    return {
+      heightArr: []
+    }
+  },
+  mounted() {
+    this.listenScroll()
+    this.handleCityGroupHeight()
+    this.listenAlphabetClick()
+  },
+  methods: {
+    listenScroll() {
+      this.$nextTick(() => {
+        let currentIndex = 0
+        this.$refs.cityWrap.addEventListener('scroll', () => {
+          const top = this.$refs.cityWrap.scrollTop
+          this.heightArr.forEach((h, index) => {
+            if (top > h && top < this.heightArr[index + 1]) {
+              if (currentIndex === index) {
+                return null
+              } else {
+                currentIndex = index
+                Events.emit('setIndex', currentIndex)
+              }
+            }
+            if (top > this.heightArr[this.heightArr.length - 1]) {
+              currentIndex = this.heightArr.length - 1
+              Events.emit('setIndex', currentIndex)
+            }
+          })
+        })
+      })
+    },
+    listenAlphabetClick() {
+      this.clearListenAlphabetClick()
+      Events.on('alphabet', (index) => {
+        if (this.$refs.cityWrap) {
+          this.$refs.cityWrap.scrollTop = this.heightArr[index]
+        }
+      })
+    },
+    clearListenAlphabetClick() {
+      Events.off('alphabet')
+    },
+    handleCityGroupHeight() {
+      this.$nextTick(() => {
+        // console.log(this.$refs.cityGroup)
+        let height = 0
+        const heightArr = []
+        const elArr = this.$refs.cityGroup
+        elArr.forEach(item => {
+          heightArr.push(height)
+          height += item.offsetHeight
+        })
+        this.heightArr = heightArr
+      })
+    }
   }
 }
 </script>

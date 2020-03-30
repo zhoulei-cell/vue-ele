@@ -1,4 +1,6 @@
-const cities = require('./src/network/json/cities.json')
+const cities = require('./src/network/json/cities')
+const shopping = require('./src/network/json/shopping')
+const filter = require('./src/network/json/filter')
 module.exports = {
   css: {
     loaderOptions: {
@@ -21,6 +23,14 @@ module.exports = {
     before(app) {
       app.get('/data/cities', (req, res) => {
         res.json(cities)
+      })
+
+      app.get('/data/shopping', (req, res) => {
+        res.json(shopping)
+      })
+
+      app.get('/data/filter', (req, res) => {
+        res.json(filter)
       })
     }
   },

@@ -1,7 +1,7 @@
 <template>
   <div class="addr-search-list-wrapper">
     <ul class="search-list" v-show="tips.length > 0">
-      <li class="search-list-item" v-for="(item, index) in tips" :key="index">
+      <li class="search-list-item" v-for="(item, index) in tips" :key="index" @click="$emit('tipClick', item.district + item.address)">
         <h5 class="location-info">{{item.name}}</h5>
         <p class="location-info-desc">{{item.district + item.address}}</p>
       </li>

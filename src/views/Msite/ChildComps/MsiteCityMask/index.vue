@@ -1,13 +1,29 @@
 <template>
   <div class="city-mask">
-    <CityNavBar @leftClick="toggleCityPage(false)"/>
-    <CitySearch v-model="searchVal" :value="searchVal"/>
-    <CityList :cityList="cityList" :searchList="searchList" :isSearch="isSearch"/>
-    <BaseAlphabetIndex :alphabet="alphabet" :isShow="!isSearch"/>
+    <CityNavBar
+      @leftClick="toggleCityPage(false)"
+    />
+    <CitySearch
+      v-model="searchVal"
+      :value="searchVal"
+    />
+    <CityList
+      :cityList="cityList"
+      :searchList="searchList"
+      :isSearch="isSearch"
+      :toggleCityPage="toggleCityPage"
+      @cityClick="cityClick"
+    />
+    <BaseAlphabetIndex
+      :alphabet="alphabet"
+      :isShow="!isSearch"
+    />
   </div>
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
+import * as TYPES from 'store/mutation-types'
 import CityNavBar from './ChildComps/CityNavBar'
 import CitySearch from './ChildComps/CitySearch'
 import CityList from './ChildComps/CityList'
@@ -31,6 +47,13 @@ export default {
     this.getCity()
   },
   methods: {
+    ...mapMutations('location', {
+      setCity: TYPES.SET_CITY
+    }),
+    cityClick(city) {
+      this.setCity(city)
+      this.toggleCityPage(false)
+    },
     getCity() {
       let cities = sessionStorage.getItem('ele_cities')
       if (cities) {
