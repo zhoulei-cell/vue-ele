@@ -8,8 +8,25 @@
     <MsiteSwiper :swipeImgs="swipeImgs"/>
     <MsiteFoodCategory :entries="entries"/>
     <MsiteRecomTitle/>
-    <MsiteFilter/>
+
+    <MsiteFilterTab
+      :navTab="navTab"
+      :currentFilter="currentFilter"
+      @filterSort="filterSort"
+    />
     <MsiteShopList/>
+    <MsiteFilterMask
+      v-show="isShowFilter"
+      :navTab="navTab"
+      :sortBy="sortBy"
+      :screenBy="screenBy"
+      :currentFilter="currentFilter"
+      :currentSelectSort="currentSelectSort"
+      @hideFilter="toggleFilterPage()"
+      @filterSort="filterSort"
+      @selectSort="selectSort"
+      @filterSelect="filterSelect"
+    />
 
     <transition name="fade">
       <MsiteAddrMask
@@ -33,8 +50,9 @@ import MsiteSearch from './ChildComps/MsiteSearch'
 import MsiteSwiper from './ChildComps/MsiteSwiper'
 import MsiteFoodCategory from './ChildComps/MsiteFoodCategory'
 import MsiteRecomTitle from './ChildComps/MsiteRecomTitle'
-import MsiteFilter from './ChildComps/MsiteFilter'
+import MsiteFilterTab from './ChildComps/MsiteFilterTab'
 import MsiteShopList from './ChildComps/MsiteShopList'
+import MsiteFilterMask from './ChildComps/MsiteFilterMask'
 import MsiteAddrMask from './ChildComps/MsiteAddrMask'
 import MsiteCityMask from './ChildComps/MsiteCityMask'
 import { mapActions, mapState } from 'vuex'
@@ -44,10 +62,16 @@ export default {
   name: 'Msite',
   data() {
     return {
+      isShowFilter: false,
       isShowAddr: false,
       isShowCity: false,
+      currentFilter: 0,
+      currentSelectSort: 0,
       swipeImgs: [],
-      entries: []
+      entries: [],
+      navTab: [],
+      sortBy: [],
+      screenBy: []
     }
   },
   mounted() {
@@ -69,6 +93,9 @@ export default {
     toggleCityPage(val) {
       this.isShowCity = val
     },
+    toggleFilterPage() {
+      this.isShowFilter = !this.isShowFilter
+    },
     getShop() {
       getShopping().then(data => {
         data = data.data
@@ -78,8 +105,51 @@ export default {
     },
     getFilter() {
       getFilter().then(data => {
+        data = data.data
+        this.navTab = data.navTab
+        this.sortBy = data.sortBy
+        this.screenBy = data.screenBy
         console.log(data)
       })
+    },
+    filterSort(index) {
+      console.log(index)
+      this.currentFilter = index
+      switch (index) {
+        case 0:
+          this.isShowFilter = true
+          break
+        case 1:
+          if (this.isShowFilter) {
+            this.isShowFilter = false
+          }
+          this.updata({ condition: this.navTab[1].condition })
+          break
+        case 2:
+          if (this.isShowFilter) {
+            this.isShowFilter = false
+          }
+          this.updata({ condition: this.navTab[2].condition })
+          break
+        case 3:
+          this.isShowFilter = true
+          break
+      }
+    },
+    selectSort(index) {
+      const sort = this.sortBy[index]
+      this.isShowFilter = false
+      this.currentSelectSort = index
+      this.navTab[0].name = sort.name
+      this.updata({ condition: sort.code })
+    },
+    filterSelect(screenData) {
+      this.isShowFilter = false
+      console.log(screenData)
+    },
+
+    updata(rule) {
+      console.log(rule)
     }
   },
   components: {
@@ -88,8 +158,9 @@ export default {
     MsiteSwiper,
     MsiteFoodCategory,
     MsiteRecomTitle,
-    MsiteFilter,
+    MsiteFilterTab,
     MsiteShopList,
+    MsiteFilterMask,
     MsiteAddrMask,
     MsiteCityMask
   }

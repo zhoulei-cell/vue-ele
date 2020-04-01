@@ -2,7 +2,7 @@
     "navTab": [
         {
             "name": "综合排序",
-            "icon": "caret-down"
+            "icon": "icon-xiajiantou1"
         },
         {
             "name": "距离最近",
@@ -14,7 +14,7 @@
         },
         {
             "name": "筛选",
-            "icon": "filter"
+            "icon": "icon-shaixuan"
         }
     ],
     "sortBy": [

@@ -15,7 +15,7 @@ a{
   text-decoration: none;
 }
 
-p{
+p,dl,dd{
   margin: 0;
 }
 

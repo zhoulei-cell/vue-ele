@@ -25,6 +25,12 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="scss">
+  .swiper-container .swiper-pagination .swiper-pagination-item{
+    width: 4px;
+    height: 4px;
+  }
+  .swiper-container .swiper-pagination .swiper-pagination-item.active{
+    background-color: $color-primary;
+  }
 </style>
