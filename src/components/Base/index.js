@@ -1,3 +1,4 @@
+export { default as BaseRating } from './BaseRating'
 export { BaseTabBar, BaseTabBarItem } from './BaseTabBar'
 export { default as BaseInput } from './BaseInput'
 export { default as BaseButton } from './BaseButton'

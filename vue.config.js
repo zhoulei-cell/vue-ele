@@ -43,7 +43,8 @@ module.exports = {
         utils: '@/utils',
         api: '@/api',
         store: '@/store',
-        network: '@/network'
+        network: '@/network',
+        plugins: '@/plugins'
       }
     }
   }

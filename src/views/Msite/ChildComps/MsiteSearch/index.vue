@@ -1,5 +1,5 @@
 <template>
-  <div class="msite-search">
+  <div class="msite-search" @click="goSearch">
     <div class="search-box">
       <i class="iconfont icon-sousuo"></i>
       <span>搜素商家、商品名称</span>
@@ -9,7 +9,12 @@
 
 <script>
 export default {
-  name: 'MsiteSearch'
+  name: 'MsiteSearch',
+  methods: {
+    goSearch() {
+      this.$router.push('/search')
+    }
+  }
 }
 </script>
 

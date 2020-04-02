@@ -1,10 +1,11 @@
 <template>
-  <div class="msite">
+  <div class="msite" :class="{'of-auto': isAuto}" ref="msite">
     <MsiteHeader
       @click="toggleAddrPage(true)"
       :formattedAddress="formattedAddress"
     />
     <MsiteSearch/>
+    <MsiteSearch v-show="isFixed" :class="{fixed: isFixed}"/>
     <MsiteSwiper :swipeImgs="swipeImgs"/>
     <MsiteFoodCategory :entries="entries"/>
     <MsiteRecomTitle/>
@@ -14,7 +15,10 @@
       :currentFilter="currentFilter"
       @filterSort="filterSort"
     />
-    <MsiteShopList/>
+    <MsiteShopList :restaurant="restaurant"/>
+    <div v-if="isAuto && restaurant.length > 0" class="load-more">
+      {{ loadText }}
+    </div>
     <MsiteFilterMask
       v-show="isShowFilter"
       :navTab="navTab"
@@ -57,7 +61,7 @@ import MsiteAddrMask from './ChildComps/MsiteAddrMask'
 import MsiteCityMask from './ChildComps/MsiteCityMask'
 import { mapActions, mapState } from 'vuex'
 
-import { getShopping, getFilter } from 'network/api/msite'
+import { getShopping, getFilter, getShopList } from 'network/api/msite'
 export default {
   name: 'Msite',
   data() {
@@ -65,25 +69,37 @@ export default {
       isShowFilter: false,
       isShowAddr: false,
       isShowCity: false,
+      isFixed: false,
       currentFilter: 0,
       currentSelectSort: 0,
       swipeImgs: [],
       entries: [],
       navTab: [],
       sortBy: [],
-      screenBy: []
+      screenBy: [],
+      restaurant: [],
+      page: 0,
+      size: 5,
+      loadText: '上拉加载更多...',
+      isLoad: false
     }
   },
   mounted() {
     this.getLocation()
     this.getShop()
     this.getFilter()
+    this.getShopList()
+
+    this.listenMsiteScroll()
   },
   computed: {
     ...mapState('location', {
       city: 'city',
       formattedAddress: 'address'
-    })
+    }),
+    isAuto() {
+      return !this.isShowFilter && !this.isShowAddr && !this.isShowCity
+    }
   },
   methods: {
     ...mapActions('location', ['getLocation']),
@@ -110,6 +126,23 @@ export default {
         this.sortBy = data.sortBy
         this.screenBy = data.screenBy
         console.log(data)
+      })
+    },
+    getShopList() {
+      this.page++
+      getShopList(this.page, this.size).then(res => {
+        const data = res.data
+        if (data.length > 0) {
+          this.isLoad = false
+          this.restaurant = [...this.restaurant, ...data]
+          if (data.length < this.size) {
+            this.isLoad = true
+            this.loadText = '没有更多数据了'
+          }
+        } else {
+          this.isLoad = true
+          this.loadText = '没有更多数据了'
+        }
       })
     },
     filterSort(index) {
@@ -150,6 +183,27 @@ export default {
 
     updata(rule) {
       console.log(rule)
+    },
+
+    listenMsiteScroll() {
+      const el = this.$refs.msite
+      el.addEventListener('scroll', () => {
+        const clientHeight = el.clientHeight
+        const scrollHeight = el.scrollHeight
+        const scrollTop = el.scrollTop
+        if (scrollTop >= 33) {
+          this.isFixed = true
+        } else {
+          this.isFixed = false
+        }
+        if (scrollHeight - (clientHeight + scrollTop) <= 30) {
+          if (!this.isLoad) {
+            console.log('刷新')
+            this.isLoad = true
+            this.getShopList()
+          }
+        }
+      })
     }
   },
   components: {
@@ -171,6 +225,23 @@ export default {
   .msite{
     position: relative;
     height: 100%;
+  }
+  .msite .load-more{
+    height: 26px;
+    font-size: 12px;
+    text-align: center;
+    line-height: 26px;
+  }
+  .of-auto{
+    overflow-y: auto;
+  }
+  .fixed{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
+    z-index: 999;
   }
   .fade-enter, .fade-leave-to{
     transform: translate(100%, 0);

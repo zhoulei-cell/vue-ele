@@ -1,8 +1,6 @@
 import axios from 'axios'
 
-const instance = axios.create({
-  timeout: 5000
-})
+const instance = axios.create()
 
 // 添加请求拦截器
 instance.interceptors.request.use(config => {
